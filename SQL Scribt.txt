@@ -1,0 +1,306 @@
+ CREATE TABLE participants (
+    participant_id SERIAL PRIMARY KEY,
+    first_name VARCHAR(50) NOT NULL,
+    last_name VARCHAR(50) NOT NULL,
+    email VARCHAR(100) UNIQUE NOT NULL,
+    phone VARCHAR(20),
+    stage INT,
+    registration_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+ CREATE TABLE tasks (
+    task_id SERIAL PRIMARY KEY,
+    task_name VARCHAR(100) NOT NULL,
+    description TEXT,
+    max_score INT NOT NULL
+);
+ CREATE TABLE submissions (
+    submission_id SERIAL PRIMARY KEY,
+    participant_id INT REFERENCES participants(participant_id) ON DELETE CASCADE,
+    task_id INT REFERENCES tasks(task_id) ON DELETE CASCADE,
+    submission_file VARCHAR(255),
+    submission_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    status VARCHAR(20) DEFAULT 'pending'
+);
+ CREATE TABLE judges (
+    judge_id SERIAL PRIMARY KEY,
+    first_name VARCHAR(50) NOT NULL,
+    last_name VARCHAR(50) NOT NULL,
+    email VARCHAR(100) UNIQUE NOT NULL,
+    assigned_stage INT
+);
+ CREATE TABLE evaluations (
+    evaluation_id SERIAL PRIMARY KEY,
+    submission_id INT REFERENCES submissions(submission_id) ON DELETE CASCADE,
+    judge_id INT REFERENCES judges(judge_id) ON DELETE CASCADE,
+    score NUMERIC CHECK (score >= 0),
+    feedback TEXT,
+    evaluation_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+ CREATE TABLE stages (
+    stage_id SERIAL PRIMARY KEY,
+    stage_name VARCHAR(50) NOT NULL,
+    start_date DATE,
+    end_date DATE
+);
+ CREATE TABLE audit_logs (
+    log_id SERIAL PRIMARY KEY,
+    user_type VARCHAR(20) NOT NULL,
+    user_id INT NOT NULL,
+    action TEXT NOT NULL,
+    timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+ CREATE TABLE reports (
+    report_id SERIAL PRIMARY KEY,
+    report_type VARCHAR(50),
+    generated_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    data_json JSONB
+);
+
+
+
+ -- Participants (100 entries)
+INSERT INTO participants (first_name, last_name, email, phone, stage) VALUES
+('Alice','Brown','alice.brown1@example.com','08010000001',1),
+('Brian','Smith','brian.smith2@example.com','08010000002',2),
+('Cynthia','Johnson','cynthia.johnson3@example.com','08010000003',3),
+('Daniel','Williams','daniel.williams4@example.com','08010000004',1),
+('Ella','Jones','ella.jones5@example.com','08010000005',2),
+('Frank','Davis','frank.davis6@example.com','08010000006',3),
+('Grace','Miller','grace.miller7@example.com','08010000007',1),
+('Henry','Wilson','henry.wilson8@example.com','08010000008',2),
+('Ivy','Moore','ivy.moore9@example.com','08010000009',3),
+('James','Taylor','james.taylor10@example.com','08010000010',1),
+('Kemi','Anderson','kemi.anderson11@example.com','08010000011',2),
+('Lara','Thomas','lara.thomas12@example.com','08010000012',3),
+('Michael','Jackson','michael.jackson13@example.com','08010000013',1),
+('Nina','White','nina.white14@example.com','08010000014',2),
+('Oscar','Harris','oscar.harris15@example.com','08010000015',3),
+('Paul','Martin','paul.martin16@example.com','08010000016',1),
+('Quincy','Thompson','quincy.thompson17@example.com','08010000017',2),
+('Rita','Garcia','rita.garcia18@example.com','08010000018',3),
+('Samuel','Martinez','samuel.martinez19@example.com','08010000019',1),
+('Tina','Robinson','tina.robinson20@example.com','08010000020',2),
+('Umar','Brown','umar.brown21@example.com','08010000021',3),
+('Victoria','Smith','victoria.smith22@example.com','08010000022',1),
+('Wale','Johnson','wale.johnson23@example.com','08010000023',2),
+('Xena','Williams','xena.williams24@example.com','08010000024',3),
+('Yusuf','Jones','yusuf.jones25@example.com','08010000025',1),
+('Zainab','Davis','zainab.davis26@example.com','08010000026',2),
+('Alice','Miller','alice.miller27@example.com','08010000027',3),
+('Brian','Wilson','brian.wilson28@example.com','08010000028',1),
+('Cynthia','Moore','cynthia.moore29@example.com','08010000029',2),
+('Daniel','Taylor','daniel.taylor30@example.com','08010000030',3),
+('Ella','Anderson','ella.anderson31@example.com','08010000031',1),
+('Frank','Thomas','frank.thomas32@example.com','08010000032',2),
+('Grace','Jackson','grace.jackson33@example.com','08010000033',3),
+('Henry','White','henry.white34@example.com','08010000034',1),
+('Ivy','Harris','ivy.harris35@example.com','08010000035',2),
+('James','Martin','james.martin36@example.com','08010000036',3),
+('Kemi','Thompson','kemi.thompson37@example.com','08010000037',1),
+('Lara','Garcia','lara.garcia38@example.com','08010000038',2),
+('Michael','Martinez','michael.martinez39@example.com','08010000039',3),
+('Nina','Robinson','nina.robinson40@example.com','08010000040',1),
+('Oscar','Brown','oscar.brown41@example.com','08010000041',2),
+('Paul','Smith','paul.smith42@example.com','08010000042',3),
+('Quincy','Johnson','quincy.johnson43@example.com','08010000043',1),
+('Rita','Williams','rita.williams44@example.com','08010000044',2),
+('Samuel','Jones','samuel.jones45@example.com','08010000045',3),
+('Tina','Davis','tina.davis46@example.com','08010000046',1),
+('Umar','Miller','umar.miller47@example.com','08010000047',2),
+('Victoria','Wilson','victoria.wilson48@example.com','08010000048',3),
+('Wale','Moore','wale.moore49@example.com','08010000049',1),
+('Xena','Taylor','xena.taylor50@example.com','08010000050',2),
+('Yusuf','Anderson','yusuf.anderson51@example.com','08010000051',3),
+('Zainab','Thomas','zainab.thomas52@example.com','08010000052',1),
+('Alice','Jackson','alice.jackson53@example.com','08010000053',2),
+('Brian','White','brian.white54@example.com','08010000054',3),
+('Cynthia','Harris','cynthia.harris55@example.com','08010000055',1),
+('Daniel','Martin','daniel.martin56@example.com','08010000056',2),
+('Ella','Thompson','ella.thompson57@example.com','08010000057',3),
+[19/03/2026 11:11] Famimi Joyce: ('Frank','Garcia','frank.garcia58@example.com','08010000058',1),
+('Grace','Martinez','grace.martinez59@example.com','08010000059',2),
+('Henry','Robinson','henry.robinson60@example.com','08010000060',3),
+('Ivy','Brown','ivy.brown61@example.com','08010000061',1),
+('James','Smith','james.smith62@example.com','08010000062',2),
+('Kemi','Johnson','kemi.johnson63@example.com','08010000063',3),
+('Lara','Williams','lara.williams64@example.com','08010000064',1),
+('Michael','Jones','michael.jones65@example.com','08010000065',2),
+('Nina','Davis','nina.davis66@example.com','08010000066',3),
+('Oscar','Miller','oscar.miller67@example.com','08010000067',1),
+('Paul','Wilson','paul.wilson68@example.com','08010000068',2),
+('Quincy','Moore','quincy.moore69@example.com','08010000069',3),
+('Rita','Taylor','rita.taylor70@example.com','08010000070',1),
+('Samuel','Anderson','samuel.anderson71@example.com','08010000071',2),
+('Tina','Thomas','tina.thomas72@example.com','08010000072',3),
+('Umar','Jackson','umar.jackson73@example.com','08010000073',1),
+('Victoria','White','victoria.white74@example.com','08010000074',2),
+('Wale','Harris','wale.harris75@example.com','08010000075',3),
+('Xena','Martin','xena.martin76@example.com','08010000076',1),
+('Yusuf','Thompson','yusuf.thompson77@example.com','08010000077',2),
+('Zainab','Garcia','zainab.garcia78@example.com','08010000078',3),
+('Alice','Martinez','alice.martinez79@example.com','08010000079',1),
+('Brian','Robinson','brian.robinson80@example.com','08010000080',2),
+('Cynthia','Brown','cynthia.brown81@example.com','08010000081',3),
+('Daniel','Smith','daniel.smith82@example.com','08010000082',1),
+('Ella','Johnson','ella.johnson83@example.com','08010000083',2),
+('Frank','Williams','frank.williams84@example.com','08010000084',3),
+('Grace','Jones','grace.jones85@example.com','08010000085',1),
+('Henry','Davis','henry.davis86@example.com','08010000086',2),
+('Ivy','Miller','ivy.miller87@example.com','08010000087',3),
+('James','Wilson','james.wilson88@example.com','08010000088',1),
+('Kemi','Moore','kemi.moore89@example.com','08010000089',2),
+('Lara','Taylor','lara.taylor90@example.com','08010000090',3),
+('Michael','Anderson','michael.anderson91@example.com','08010000091',1),
+('Nina','Thomas','nina.thomas92@example.com','08010000092',2),
+('Oscar','Jackson','oscar.jackson93@example.com','08010000093',3),
+('Paul','White','paul.white94@example.com','08010000094',1),
+('Quincy','Harris','quincy.harris95@example.com','08010000095',2),
+('Rita','Martin','rita.martin96@example.com','08010000096',3),
+('Samuel','Thompson','samuel.thompson97@example.com','08010000097',1),
+('Tina','Garcia','tina.garcia98@example.com','08010000098',2),
+('Umar','Martinez','umar.martinez99@example.com','08010000099',3),
+('Victoria','Robinson','victoria.robinson100@example.com','08010100000',1);
+ -- Tasks
+INSERT INTO tasks (task_name, description, max_score) VALUES
+('Data Cleaning','Clean messy dataset and prepare it for analysis',100),
+('SQL Analysis','Analyze data using SQL queries',100),
+('Dashboard Report','Create a dashboard to visualize the data',100),
+('Presentation','Present findings from data analysis',100);
+ -- Judges
+INSERT INTO judges (first_name, last_name, email, assigned_stage) VALUES
+('John','Doe','john.doe@example.com',1),
+('Mary','Smith','mary.smith@example.com',2),
+('David','Johnson','david.johnson@example.com',3);
+ -- Stages
+INSERT INTO stages (stage_name, start_date, end_date) VALUES
+('Stage 1','2026-01-01','2026-01-07'),
+('Stage 2','2026-01-08','2026-01-14'),
+ -- Submissions
+INSERT INTO submissions (participant_id, task_id, submission_file, status) VALUES
+(1,1,'submission_1.pdf','reviewed'),
+(2,2,'submission_2.pdf','pending'),
+(3,3,'submission_3.pdf','reviewed'),
+(4,4,'submission_4.pdf','pending'),
+(5,1,'submission_5.pdf','reviewed'),
+(6,2,'submission_6.pdf','pending'),
+(7,3,'submission_7.pdf','reviewed'),
+(8,4,'submission_8.pdf','pending'),
+(9,1,'submission_9.pdf','reviewed'),
+(10,2,'submission_10.pdf','pending'),
+(11,3,'submission_11.pdf','reviewed'),
+(12,4,'submission_12.pdf','pending'),
+(13,1,'submission_13.pdf','reviewed'),
+(14,2,'submission_14.pdf','pending'),
+(15,3,'submission_15.pdf','reviewed'),
+(16,4,'submission_16.pdf','pending'),
+(17,1,'submission_17.pdf','reviewed'),
+(18,2,'submission_18.pdf','pending'),
+(19,3,'submission_19.pdf','reviewed'),
+(20,4,'submission_20.pdf','pending'),
+(21,1,'submission_21.pdf','reviewed'),
+(22,2,'submission_22.pdf','pending'),
+(23,3,'submission_23.pdf','reviewed'),
+(24,4,'submission_24.pdf','pending'),
+(25,1,'submission_25.pdf','reviewed'),
+(26,2,'submission_26.pdf','pending'),
+(27,3,'submission_27.pdf','reviewed'),
+(28,4,'submission_28.pdf','pending'),
+(29,1,'submission_29.pdf','reviewed'),
+(30,2,'submission_30.pdf','pending'),
+(31,3,'submission_31.pdf','reviewed'),
+(32,4,'submission_32.pdf','pending'),
+(33,1,'submission_33.pdf','reviewed'),
+(34,2,'submission_34.pdf','pending'),
+(35,3,'submission_35.pdf','reviewed'),
+(36,4,'submission_36.pdf','pending'),
+(37,1,'submission_37.pdf','reviewed'),
+(38,2,'submission_38.pdf','pending'),
+(39,3,'submission_39.pdf','reviewed'),
+(40,4,'submission_40.pdf','pending'),
+(41,1,'submission_41.pdf','reviewed'),
+(42,2,'submission_42.pdf','pending'),
+(43,3,'submission_43.pdf','reviewed'),
+(44,4,'submission_44.pdf','pending'),
+(45,1,'submission_45.pdf','reviewed'),
+(46,2,'submission_46.pdf','pending'),
+(47,3,'submission_47.pdf','reviewed'),
+(48,4,'submission_48.pdf','pending'),
+(49,1,'submission_49.pdf','reviewed'),
+(50,2,'submission_50.pdf','pending');
+ -- Evaluations
+INSERT INTO evaluations (submission_id, judge_id, score, feedback) VALUES
+(1,1,90,'Excellent work'),
+(2,2,75,'Good job'),
+(3,3,88,'Well done'),
+(4,1,60,'Needs improvement'),
+(5,2,92,'Excellent'),
+(6,3,70,'Average'),
+(7,1,85,'Good work'),
+(8,2,55,'Poor'),
+(9,3,95,'Outstanding'),
+(10,1,78,'Good effort'),
+(11,2,82,'Nice job'),
+(12,3,65,'Could be better'),
+(13,1,88,'Well done'),
+(14,2,90,'Excellent'),
+(15,3,72,'Average'),
+(16,1,80,'Good work'),
+(17,2,85,'Nice job'),
+(18,3,60,'Needs improvement'),
+(19,1,93,'Great work'),
+(20,2,77,'Good effort');
+ -- Audit Logs
+INSERT INTO audit_logs (user_type, user_id, action) VALUES
+('participant',1,'Submitted task'),
+('participant',2,'Updated profile'),
+('participant',3,'Submitted task'),
+('judge',1,'Evaluated submission'),
+('judge',2,'Evaluated submission'),
+('judge',3,'Evaluated submission'),
+('admin',1,'Generated report'),
+('admin',2,'Added new judge'),
+('participant',4,'Submitted task'),
+('participant',5,'Updated profile');
+ -- Reports
+INSERT INTO reports (report_type, data_json) VALUES
+('Participant Summary','{"total_participants":100,"total_submissions":50,"average_score":78}'),
+('Stage Progress','{"stage_1":35,"stage_2":33,"stage_3":32}'),
+('Top Performers','{"task_1":{"Alice Brown":95,"Brian James":90},"task_2":{"Cynthia Lee":88,"Daniel White":85}}');
+[19/03/2026 13:47] Famimi Joyce: INSERT INTO participants (first_name, last_name, email, phone, stage)
+VALUES ('Test','User','testuser@gmail.com','08012345678',1);
+[19/03/2026 13:47] Famimi Joyce: INSERT INTO submissions (participant_id, task_id, submission_file, status)
+VALUES (1,1,'test_submission.pdf','pending');
+[19/03/2026 13:47] Famimi Joyce: INSERT INTO evaluations (submission_id, judge_id, score, feedback)
+VALUES (1,1,85,'Good work');
+
+ CREATE OR REPLACE VIEW v_participants AS
+SELECT id, first_name, last_name, email, stage
+FROM participants;
+
+CREATE OR REPLACE VIEW v_tasks AS
+SELECT id, task_name, max_score
+FROM tasks;
+
+CREATE OR REPLACE VIEW v_submissions AS
+SELECT id, participant_id, task_id, submission_file, status
+FROM submissions;
+
+CREATE OR REPLACE VIEW v_evaluations AS
+SELECT id, submission_id, judge_id, score, feedback
+FROM evaluations;
+
+CREATE OR REPLACE VIEW v_judges AS
+SELECT id, first_name, last_name, email, assigned_stage
+FROM judges;
+
+CREATE OR REPLACE VIEW v_stages AS
+SELECT id, stage_name, start_date, end_date
+FROM stages;
+
+CREATE OR REPLACE VIEW v_audit_logs AS
+SELECT id, user_type, user_id, action
+FROM audit_logs;
+
+CREATE OR REPLACE VIEW v_reports AS
+SELECT id, report_type, data_json
+FROM reports;
